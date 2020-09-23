@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhitenNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ROOT_URLCONF = 'dp1.urls'
 
