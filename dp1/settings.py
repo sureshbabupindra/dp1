@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app1.apps.App1Config', #root for ap1 app configuration App1Config=in app.py
     'import_export',
+    'rest_framework',
    # 'dp1'
 ]
 
