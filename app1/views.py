@@ -4,16 +4,16 @@ from django.http import HttpResponse
 import requests
 import json
 
-from django.core import serializers
+#from django.core import serializers
 
 from django import http
 from django.http import JsonResponse
 
 from app1.models import pumpInstData
 
-from rest_framework import viewsets
+#from rest_framework import viewsets
 
-from .serializers import pumpInstDataSerializer
+#from .serializers import pumpInstDataSerializer
 
 
 
