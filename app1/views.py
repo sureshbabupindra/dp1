@@ -4,12 +4,20 @@ from django.http import HttpResponse
 import requests
 import json
 
+
+from datetime import datetime, timedelta
+
+from django.db import models
 #from django.core import serializers
 
 from django import http
 from django.http import JsonResponse
 
 from app1.models import pumpInstData
+from app1.models import ind
+from app1.models import dd
+
+from django.db.models import F
 
 #from rest_framework import viewsets
 
@@ -33,6 +41,31 @@ def abc(request):
     data1 = list(pumpInstData.objects.values('power_kwh','voltage_pump','current_pump'))
     return JsonResponse({'data': data, 'data1': data1})
     
+def InstData(request):
+
+    xy = pumpInstData.objects.all()
+    for z in xy:
+        if z.rms_id=="A-1001":
+           z.flow_lph=z.flow_lph
+        z.save()          
+      
+
+def Inst(request):
+
+            data = list(pumpInstData.objects.filter(datetime__range=((datetime.now())-timedelta(minutes=90), (datetime.now()))).values('datetime','rms_id'))
+            return JsonResponse({'data': data})
+
+def GetInstataneousData(request):
+            SpdData = list(ind.objects.filter(Test_Date__range=((datetime.now())-timedelta(minutes=180), (datetime.now()))).values('Site_Code','Test_Date'))
+            InverterData = list(ind.objects.filter(Test_Date__range=((datetime.now())-timedelta(minutes=90), (datetime.now()))).values('Site_Code','Test_Date'))
+            return JsonResponse({'SpdData': SpdData, 'InverterData': InverterData})
+
+
+
+def GetInvDaysData(request):
+            data = list(dd.objects.all().values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
+            return JsonResponse({'Day Wise Data': data})
+           
 
 
 
