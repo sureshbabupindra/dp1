@@ -19,6 +19,7 @@ from app1.models import dd
 
 from django.db.models import F
 
+
 #from rest_framework import viewsets
 
 #from .serializers import pumpInstDataSerializer
@@ -63,8 +64,17 @@ def GetInstataneousData(request):
 
 
 def GetInvDaysData(request):
-            data = list(dd.objects.all().values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
-            return JsonResponse({'Day Wise Data': data})
+            
+            
+               # start_date=datetime.strptime(request.GET["start"],"%Y-%m-%d")
+                #end_date=datetime.strptime(request.GET["end"],"%Y-%m-%d")+timedelta(days=1)
+                d = datetime.strptime(request.GET['date'],"%Y-%m-%d").date()
+                print(d)
+                data = list(dd.objects.filter(Date__startswith=d).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
+                return JsonResponse({'Day Wise Data': data})
+
+            #else:
+                #return HttpResponse('Error!')
            
 
 
