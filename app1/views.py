@@ -16,8 +16,10 @@ from django.http import JsonResponse
 from app1.models import pumpInstData
 from app1.models import ind
 from app1.models import dd
+from app1.models import md
 
 from django.db.models import F
+from django.db.models import Sum, Avg
 
 
 #from rest_framework import viewsets
@@ -68,14 +70,68 @@ def GetInvDaysData(request):
             
                # start_date=datetime.strptime(request.GET["start"],"%Y-%m-%d")
                 #end_date=datetime.strptime(request.GET["end"],"%Y-%m-%d")+timedelta(days=1)
-                d = datetime.strptime(request.GET['date'],"%Y-%m-%d").date()
-                print(d)
-                data = list(dd.objects.filter(Date__startswith=d).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
-                return JsonResponse({'Day Wise Data': data})
+                d = datetime.strptime(request.GET['TestDate'],"%Y-%m-%d").date()
+                p = request.GET['ProjectName']
+                c=datetime.now().date()
+                #print(d)
+                
+                if d<c :
+                    data = list(dd.objects.filter(Date__startswith=d, Project=p).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
+                    return JsonResponse({'Day Wise Data': data})
+                else:
+                    return HttpResponse('<h1>Inavalid Date Request<h1>')
+
 
             #else:
                 #return HttpResponse('Error!')
-           
+
+
+def GetInvMonthData(request):
+
+    d = datetime.strptime(request.GET['TestDate'],"%Y-%m-%d").date()
+    p = request.GET['ProjectName']
+
+    data = list(md.objects.filter(Date__startswith=d, Project=p).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
+    return JsonResponse({'Month Wise Data': data})
+
+
+"""
+def GetInvMonthData(request):
+                     
+               # start_date=datetime.strptime(request.GET["start"],"%Y-%m-%d")
+                #end_date=datetime.strptime(request.GET["end"],"%Y-%m-%d")+timedelta(days=1)
+                #d = datetime.strptime(request.GET['TestDate'],"%Y-%m-%d").date()
+                #p = request.GET['ProjectName']
+                #print(d)
+                #data = dd.objects.filter(Date__range=((datetime.now())-timedelta(days=5), (datetime.now()))).aggregate(Sum('Gross_KWH'), Sum('Total_KWH_Generation'))
+                #total = dd.objects.filter(Date__range=((datetime.now())-timedelta(days=5), (datetime.now()))).aggregate(Sum('Gross_KWH'))
+                #data = list(dd.objects.filter(Date__range=((datetime.now())-timedelta(days=5), (datetime.now()))).values('Date', 'Gross_KWH'='total' ))
+                #total = Sum(data)
+
+                data = dd.objects.filter(Date__range=((datetime.now())-timedelta(days=7), (datetime.now())+timedelta(days=1))).order_by('System_RID_No')
+                data1 = dd.objects.filter(Date__range=((datetime.now())-timedelta(days=7), (datetime.now())))
+                a = dd.objects.filter(Date__range=((datetime.now())-timedelta(days=7), (datetime.now())++timedelta(days=1))).aggregate(Sum('Gross_KWH')).get('Gross_KWH__sum')
+
+                MonthWiseData = []
+                for x in data:
+                    MonthWiseData.append({
+
+                        "System_RID_No": x.System_RID_No,
+                        "Date": x.Date,
+                        "Gross_KWH": a,
+                        
+                        #"Total_KWH_Generation": x.filter(Date__range=((datetime.now())-timedelta(days=5), (datetime.now()))).aggregate(Sum('Total_KWH_Generation'))
+                         
+                    })
+
+                
+
+
+                    #context={'Month Wise Data': MonthWiseData}
+                
+                return JsonResponse({'Month Wise Data': MonthWiseData})
+
+  """         
 
 
 

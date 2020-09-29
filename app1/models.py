@@ -66,6 +66,24 @@ class dd(models.Model):
 		return self.System_RID_No+  str(self.Date)
 
 
+class md(models.Model):
+	"""docstring for ClassName"""
+	Project = models.CharField(max_length=50,null=True,blank=True)
+	System_RID_No = models.CharField(max_length=30,null=True,blank=True)
+	Date = models.DateTimeField(null=True,blank=True)
+	RunTime_Hrs = models.FloatField(null=True,blank=True)
+	Water_Discharge_Lts = models.FloatField(null=True,blank=True)
+	Pump_Consumption_KWH = models.FloatField(null=True,blank=True)
+	Inverter_Input_KWH = models.FloatField(null=True,blank=True)
+	Inverter_Output_KWH = models.FloatField(null=True,blank=True)
+	Total_KWH_Generation = models.FloatField(null=True,blank=True)
+	Gross_KWH = models.FloatField(null=True,blank=True)
+
+
+	def __str__(self):   
+		return self.System_RID_No+  str(self.Date)
+
+
 
 class meta:   #for admin database actions
 	verbose_name = 'pumpInstData'
@@ -78,6 +96,10 @@ class meta:   #for admin database actions
 class meta:   #for admin database actions
 	verbose_name = 'dd'
 	erbose_name_plural = 'dd'
+
+class meta:   #for admin database actions
+	verbose_name = 'md'
+	erbose_name_plural = 'md'
 
 
 

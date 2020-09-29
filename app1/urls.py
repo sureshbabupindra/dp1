@@ -12,4 +12,5 @@ urlpatterns = [
     path('Inst/', views.Inst, name='blog-Inst'),
     path('GetInstataneousData/', views.GetInstataneousData, name='blog-GetInvDaysData'),
     path('GetInvDaysData/', views.GetInvDaysData, name='blog-GetInvDaysData'),
+    path('GetInvMonthData/', views.GetInvMonthData, name='blog-GetInvMonthData'),
 ]
