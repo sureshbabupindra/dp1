@@ -21,6 +21,7 @@ from app1.models import md
 from django.db.models import F
 from django.db.models import Sum, Avg
 
+from django.views.decorators.csrf import csrf_exempt
 
 #from rest_framework import viewsets
 
@@ -65,31 +66,30 @@ def GetInstataneousData(request):
 
 
 
+@csrf_exempt
 def GetInvDaysData(request):
-            
-            
-               # start_date=datetime.strptime(request.GET["start"],"%Y-%m-%d")
-                #end_date=datetime.strptime(request.GET["end"],"%Y-%m-%d")+timedelta(days=1)
-                d = datetime.strptime(request.GET['TestDate'],"%Y-%m-%d").date()
-                p = request.GET['ProjectName']
-                c=datetime.now().date()
-                #print(d)
+    ddata=json.loads(request.body)
+    # start_date=datetime.strptime(request.GET["start"],"%Y-%m-%d")
+    #end_date=datetime.strptime(request.GET["end"],"%Y-%m-%d")+timedelta(days=1)
+    # d = datetime.strptime(request.POST['TestDate'],"%Y-%m-%d").date()
+    d = datetime.strptime(ddata["TestDate"],"%Y-%m-%d").date()
+    p = ddata['ProjectName']
+    c=datetime.now().date()
+    #print(d)
                 
-                if d<c :
-                    data = list(dd.objects.filter(Date__startswith=d, Project=p).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
-                    return JsonResponse({'Day Wise Data': data})
-                else:
-                    return HttpResponse('<h1>Inavalid Date Request<h1>')
+    if d<c :
+        data = list(dd.objects.filter(Date__startswith=d, Project=p).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
+        return JsonResponse({'Day Wise Data': data})
+    else:
+        return HttpResponse('<h1>Inavalid Date Request<h1>')
+    #else:
+        #return HttpResponse('Error!')
 
-
-            #else:
-                #return HttpResponse('Error!')
-
-
+@csrf_exempt
 def GetInvMonthData(request):
-
-    d = datetime.strptime(request.GET['TestDate'],"%Y-%m-%d").date()
-    p = request.GET['ProjectName']
+    ddata=json.loads(request.body)
+    d = datetime.strptime(ddata["TestDate"],"%Y-%m-%d").date()
+    p = ddata['ProjectName']
 
     data = list(md.objects.filter(Date__startswith=d, Project=p).values('Project','System_RID_No','Date','RunTime_Hrs','Water_Discharge_Lts','Pump_Consumption_KWH','Inverter_Input_KWH','Inverter_Output_KWH','Total_KWH_Generation','Gross_KWH'))
     return JsonResponse({'Month Wise Data': data})
